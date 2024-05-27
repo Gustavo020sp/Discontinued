@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SalesWebMvc.Data;
 using SalesWebMvc.Models;
 using SalesWebMvc.Services;
 using System.Linq.Expressions;
@@ -7,7 +8,12 @@ namespace SalesWebMvc.Controllers
 {
 	public class LoginController : Controller
 	{
-		
+		private readonly SalesWebMvcContext _context;
+
+		public LoginController(SalesWebMvcContext context)
+		{
+			_context = context;
+		}
 		public IActionResult Index()
 		{
 			return View();
@@ -17,12 +23,15 @@ namespace SalesWebMvc.Controllers
 		[AutoValidateAntiforgeryToken]
 		public IActionResult Login(LoginUser loginUser)
 		{
+			
+
 			try
 			{
 
 				if (ModelState.IsValid)
 				{
-					if (loginUser.Username == "adm@gmail" && loginUser.Password == "123")
+					var v = _context.LoginUser.Where(a => a.Username.Equals(loginUser.Username) && a.Password.Equals(loginUser.Password)).FirstOrDefault();
+					if (v != null)
 					{
 						return RedirectToAction("Index", "Home");
 					}

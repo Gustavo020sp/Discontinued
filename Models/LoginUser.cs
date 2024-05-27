@@ -8,7 +8,7 @@ namespace SalesWebMvc.Models
 
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Email required")]
+        [Required(ErrorMessage = "Please enter username")]
         public string? Username { get; set; }
 
 		[Required(ErrorMessage = "Password required")]
