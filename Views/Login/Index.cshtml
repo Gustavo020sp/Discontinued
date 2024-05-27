@@ -4,16 +4,18 @@
 	ViewData["Title"] = "Login";
 }
 
+
+
 <form asp-action="Login" class="w-25">
 	<h1 class="h3 mb-3 fw-normal">Login Page</h1><div class="form-floating">
-		<input asp-for=EmailLogin type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-		<label for="floatingInput">Email address</label>
-		@Html.ValidationMessageFor(x => x.EmailLogin)
+		<input asp-for=Username type="text" class="form-control" id="floatingInput" placeholder="Enter your username">
+		<label for="floatingInput">Username</label>
+		@Html.ValidationMessageFor(x => x.Username)
 	</div>
 	<div class="form-floating">
-		<input asp-for=PasswordLogin type="password" class="form-control" id="floatingPassword" placeholder="Password">
+		<input asp-for=Password type="password" class="form-control" id="floatingPassword" placeholder="Enter your password">
 		<label for="floatingPassword">Password</label>
-		@Html.ValidationMessageFor(x => x.PasswordLogin)
+		@Html.ValidationMessageFor(x => x.Password)
 	</div>
 
 	<div class="form-check text-start my-3">
@@ -24,4 +26,11 @@
 	</div>
 
 	<button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+
+	@if (TempData["MensagemErro"] != null)
+	{
+		<div>
+			<p class="text-warning">@TempData["MensagemErro"]</p>
+		</div>
+	}
 </form>

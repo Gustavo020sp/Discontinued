@@ -24,7 +24,10 @@ namespace SalesWebMvc.Data
                 return;
             }
 
-            Department d1 = new Department { Id = 1, Name = "Electronics" };
+            LoginUser user1 = new LoginUser { Username = "admin", Password = "1234" };
+			LoginUser user2 = new LoginUser { Username = "admin2", Password = "123" };
+
+			Department d1 = new Department { Id = 1, Name = "Electronics" };
             Department d2 = new Department { Id = 2, Name = "Fashion" };
             Department d3 = new Department { Id = 3, Name = "Toys" };
             Department d4 = new Department { Id = 4, Name = "Clothes" };
@@ -128,9 +131,10 @@ namespace SalesWebMvc.Data
 
             if (Context is not null)
             {
-                Context.Department.AddRange(d1, d2, d3, d4);
-                Context.Seller.AddRange(s1, s2, s3, s4, s5);
-                Context.SalesRecords.AddRange(sr1, sr2, sr3, sr4, sr6, sr7, sr8, sr9, sr10, sr11, sr12, sr13, sr14, sr15, sr16, sr18, sr19, sr20, sr21, sr22, sr23, sr24, sr25, sr26, sr27, sr28, sr29, sr30);
+                Context.LoginUser.AddRange(user1, user2, user3);
+                //Context.Department.AddRange(d1, d2, d3, d4);
+                //Context.Seller.AddRange(s1, s2, s3, s4, s5);
+                //Context.SalesRecords.AddRange(sr1, sr2, sr3, sr4, sr6, sr7, sr8, sr9, sr10, sr11, sr12, sr13, sr14, sr15, sr16, sr18, sr19, sr20, sr21, sr22, sr23, sr24, sr25, sr26, sr27, sr28, sr29, sr30);
                 Context.SaveChanges();
             }
 
