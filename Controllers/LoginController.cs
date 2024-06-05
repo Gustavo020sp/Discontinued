@@ -23,8 +23,6 @@ namespace SalesWebMvc.Controllers
 		[AutoValidateAntiforgeryToken]
 		public IActionResult Login(LoginUser loginUser)
 		{
-			
-
 			try
 			{
 
@@ -43,7 +41,6 @@ namespace SalesWebMvc.Controllers
 			{
 				return View("Index");
 			}
-
 		}
 	}
 }
