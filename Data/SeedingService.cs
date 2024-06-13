@@ -1,4 +1,6 @@
-﻿using SalesWebMvc.Models;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using SalesWebMvc.Models;
 
 namespace SalesWebMvc.Data
 {
@@ -19,25 +21,25 @@ namespace SalesWebMvc.Data
         public void Seed(IApplicationBuilder applicationBuilder, SalesWebMvcContext? context)
         {
 
-            if (Context.Department.Any() || Context.Seller.Any() || Context.SalesRecords.Any())
+            if (Context.Seller.Any() || Context.SalesRecords.Any())
             {
                 return;
             }
 
             LoginUser user1 = new LoginUser { Username = "admin", Password = "1234" };
-			LoginUser user2 = new LoginUser { Username = "admin2", Password = "123" };
+            LoginUser user2 = new LoginUser { Username = "admin2", Password = "123" };
 
-			Department d1 = new Department { Id = 1, Name = "Electronics" };
+            Department d1 = new Department { Id = 1, Name = "Electronics" };
             Department d2 = new Department { Id = 2, Name = "Fashion" };
             Department d3 = new Department { Id = 3, Name = "Toys" };
             Department d4 = new Department { Id = 4, Name = "Clothes" };
 
-            Seller s1 = new Seller { Name = "John Cena", Email = "john@gmail.com", BirthDate = new DateTime(1995 / 10 / 15), BaseSalary = 5000, Department = d1 };
-            Seller s2 = new Seller { Name = "Maria Green", Email = "maria@gmail.com", BirthDate = new DateTime(1990 / 05 / 10), BaseSalary = 5500, Department = d3 };
-            Seller s3 = new Seller { Name = "Elto John", Email = "elto@gmail.com",  BirthDate = new DateTime(2000 / 10 / 03), BaseSalary = 8900, Department = d4 };
-            Seller s4 = new Seller { Name = "Josh Blue", Email = "josh@gmail.com", BirthDate = new DateTime(2003 / 03 / 06), BaseSalary = 10200, Department = d4 };
-            Seller s5 = new Seller { Name = "Milena White", Email = "milena@gmail.com",  BirthDate = new DateTime(2003 / 06 / 06), BaseSalary = 15200, Department = d2 };
-            Seller s6 = new Seller { Name = "Gustavo White", Email = "gustavo@gmail.com", BirthDate = new DateTime(1995 / 10 / 13), BaseSalary = 15200, Department = d2 };
+            Seller s1 = new Seller { Id = 1, Name = "John Cena", Email = "john@gmail.com", BirthDate = new DateTime(1995 / 10 / 15), BaseSalary = 5000, Department = d1 };
+            Seller s2 = new Seller { Id = 2, Name = "Maria Green", Email = "maria@gmail.com", BirthDate = new DateTime(1990 / 05 / 10), BaseSalary = 5500, Department = d3 };
+            Seller s3 = new Seller { Id = 3, Name = "Elto John", Email = "elto@gmail.com", BirthDate = new DateTime(2000 / 10 / 03), BaseSalary = 8900, Department = d4 };
+            Seller s4 = new Seller { Id = 4, Name = "Josh Blue", Email = "josh@gmail.com", BirthDate = new DateTime(2003 / 03 / 06), BaseSalary = 10200, Department = d4 };
+            Seller s5 = new Seller { Id = 5, Name = "Milena White", Email = "milena@gmail.com", BirthDate = new DateTime(2003 / 06 / 06), BaseSalary = 15200, Department = d2 };
+            Seller s6 = new Seller { Id = 6, Name = "Gustavo White", Email = "gustavo@gmail.com", BirthDate = new DateTime(1995 / 10 / 13), BaseSalary = 15200, Department = d2 };
 
             // SalesRecord 1
             SalesRecord sr1 = new SalesRecord { Id = 1, Date = new DateTime(2024, 04, 01), Amount = 3000.0, Salestatus = Models.Enums.SaleStatus.Billed, Seller = s1 };
@@ -129,14 +131,31 @@ namespace SalesWebMvc.Data
             // SalesRecord 30
             SalesRecord sr30 = new SalesRecord { Id = 30, Date = new DateTime(2024, 04, 30), Amount = 4800.0, Salestatus = Models.Enums.SaleStatus.Billed, Seller = s5 };
 
-            if (Context is not null)
+            using (var transaction = Context.Database.BeginTransaction())
             {
-                Context.LoginUser.AddRange(user1, user2);
-                //Context.Department.AddRange(d1, d2, d3, d4);
-                //Context.Seller.AddRange(s1, s2, s3, s4, s5);
-                //Context.SalesRecords.AddRange(sr1, sr2, sr3, sr4, sr6, sr7, sr8, sr9, sr10, sr11, sr12, sr13, sr14, sr15, sr16, sr18, sr19, sr20, sr21, sr22, sr23, sr24, sr25, sr26, sr27, sr28, sr29, sr30);
+                Context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Department ON");
+                Context.Department.AddRange(d1, d2, d3, d4);
                 Context.SaveChanges();
+                Context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Department OFF");
+
+                Context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Seller ON");
+                Context.Seller.AddRange(s1, s2, s3, s4, s5, s6);
+                Context.SaveChanges();
+                Context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Seller OFF");
+
+                Context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT SalesRecords ON");
+                Context.SalesRecords.AddRange(sr1, sr2, sr3, sr4, sr5, sr6, sr7, sr8, sr9, sr10, sr11, sr12, sr13, sr14, sr15, sr16, sr17, sr18, sr19, sr20, sr21, sr22, sr23, sr24, sr25, sr26, sr27, sr28, sr29, sr30);
+                Context.SaveChanges();
+                Context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT SalesRecords OFF");
+
+                transaction.Commit();
             }
+            //Context.LoginUser.AddRange(user1, user2);
+            //Context.Department.AddRange(d1, d2, d3, d4);
+            //Context.Seller.AddRange(s1, s2, s3, s4, s5);
+            //Context.SalesRecords.AddRange(sr1, sr2, sr3, sr4, sr6, sr7, sr8, sr9, sr10, sr11, sr12, sr13, sr14, sr15, sr16, sr18, sr19, sr20, sr21, sr22, sr23, sr24, sr25, sr26, sr27, sr28, sr29, sr30);
+            //Context.SaveChanges();
+
 
         }
     }

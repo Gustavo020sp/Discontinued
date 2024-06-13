@@ -85,7 +85,7 @@ namespace SalesWebMvc.Controllers
             {
                 return NotFound();
             }
-            //List<Department> departments =  _context.Department.FindAsync(id.Value);
+            //Department departments = await _context.Department.FindAsync(id.Value);
             //SellerFormViewModel viewModel = new SellerFormViewModel();
             //return View(viewModel);
             var departments = _context.Department.OrderBy(d => d.Name).ToList();
